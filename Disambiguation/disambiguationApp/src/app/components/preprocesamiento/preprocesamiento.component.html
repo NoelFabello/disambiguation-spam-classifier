@@ -1,0 +1,99 @@
+<div class="col-10 container border border-2 rounded mt-5 p-5 pt-3 pb-3">
+  <div class="d-flex justify-content-center">
+    <h2 class="row-12 mt-2">Preprocesamiento</h2>
+  </div>
+  <form [formGroup]="formPreprocesamiento">
+    <div>
+      <div class="row d-flex justify-content-center">
+        <div class="input-group m-3">
+          <label for="ficheroEntrada" class="input-group-text">Ruta al fichero</label>
+          <input type="text" class="form-control" placeholder="/Ruta/Fichero" formControlName="ficheroEntrada">
+          <button class="btn btn-primary" type="button" id="ficheroEntrada" (click)="obtenerRuta()">Buscar</button>
+        </div>
+        <div *ngIf="formPreprocesamiento.get('ficheroEntrada')?.invalid && formPreprocesamiento.get('ficheroEntrada')?.touched">
+          <div class="text-danger text-center mb-3"> {{mensajesError.ficheroEntrada[0].mensaje}}.</div>
+        </div>
+      </div>
+
+      <div class="row d-flex justify-content-evenly">
+        <div class="col-6">
+          <div class="input-group">
+            <label for="method" class="input-group-text">Método</label>
+            <select id="method" class="form-select input-group"  formControlName="metodo" (change)="onSelectChange($event)">
+              <option value="father" selected>FatherDisambiguation</option>
+              <option value="first-synset">FirstSynsetDisambiguation</option>
+              <option value="tokenize">Tokenize</option>
+              <option value="path">PathDisambiguation</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="input-group mb-3" [ngStyle]="{'display': synsetMethod ? 'none' : ''}">
+            <label for="caracteristicas"  class="input-group-text">Características</label>
+            <input type="text" placeholder="Número de características" class="form-control" id="caracteristicas" formControlName="caracteristicas">
+          </div>
+          <div class="row" *ngIf="formPreprocesamiento.get('caracteristicas')?.invalid && formPreprocesamiento.get('caracteristicas')?.touched">
+            <div class="text-danger text-center mb-3"> {{mensajesError.caracteristicas[0].mensaje}}.</div>
+          </div>
+
+          <div id="dimension" class="row">
+            <div class="input-group mb-3" [ngStyle]="{'display': synsetMethod ? '' : 'none'}">
+              <label for="profundidad" class="input-group-text">Profundidad</label>
+              <input type="text" class="form-control" placeholder="Nivel de profundidad"  formControlName="profundidad">
+            </div>
+            <div class="row" *ngIf="formPreprocesamiento.get('profundidad')?.invalid && formPreprocesamiento.get('profundidad')?.touched">
+              <div class="text-danger text-center mb-3"> {{mensajesError.profundidad[0].mensaje}}.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-6">
+          <div class="d-flex justify-content-center">
+            <div class="input-group mb-3">
+              <label for="ficheroSalida" class="input-group-text">Fichero de salida</label>
+              <input type="text" class="form-control" placeholder="Nombre de fichero" id="ficheroSalida" formControlName="ficheroSalida" (change)="proponerNombre($event)">
+            </div>
+          </div>
+          <div class="row" *ngIf="formPreprocesamiento.get('ficheroSalida')?.invalid && formPreprocesamiento.get('ficheroSalida')?.touched">
+            <div class="text-danger text-center mb-3"> {{mensajesError.ficheroSalida[0].mensaje}}.</div>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="d-flex justify-content-center">
+            <div class="input-group mb-3">
+              <label for="ficheroSalidaMatriz" class="input-group-text">Matriz documentos-términos</label>
+              <input type="text" class="form-control" placeholder="Nombre de fichero" id="ficheroSalidaMatriz" formControlName="ficheroSalidaMatriz">
+            </div>
+          </div>
+          <div class="row m-0" *ngIf="formPreprocesamiento.get('ficheroSalidaMatriz')?.invalid && formPreprocesamiento.get('ficheroSalidaMatriz')?.touched">
+            <div class="text-danger text-center mb-3"> {{mensajesError.ficheroSalidaMatriz[0].mensaje}}.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-grid gap-2 mt-3">
+        <button class="btn btn-primary d-flex justify-content-center align-items-center" type="button" (click)="Preprocesar()">
+          Preprocesar&nbsp;
+            <span  *ngIf="preprocesando" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+            <svg *ngIf="completado" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+              <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+            </svg>
+        </button>
+        <div class="row m-0" *ngIf="formularioIncompleto">
+          <div class="text-danger text-center mb-3"> {{mensajesError.formulario[0].mensaje}}</div>
+        </div>
+        <div class="row m-0" *ngIf="exception">
+          <div class="text-danger text-center mb-3"> Error en la petición, revise la lógica de la operación.</div>
+        </div>
+        <div class="row m-0" *ngIf="current">
+          <div class="text-danger text-center mb-3"> {{mensajesError.formulario[1].mensaje}} </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

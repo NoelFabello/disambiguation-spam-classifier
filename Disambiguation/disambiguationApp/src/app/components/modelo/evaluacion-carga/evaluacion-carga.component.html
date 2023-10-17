@@ -1,0 +1,118 @@
+<div>
+  <div class="col-10 container border border-2 rounded mt-5 p-5 pt-3 pb-3">
+    <div class="d-flex justify-content-center">
+      <h2 class="row-12 mt-2">Evaluación del modelo</h2>
+    </div>
+    <div class="container">
+
+    </div>
+    <div class="row d-flex justify-content-evenly border border-2 rounded p-3 mt-3" [formGroup]="formConfEvaluacion">
+      <div class="col-5 pb-3 pt-3">
+        <div class="input-group pt-2 mb-2">
+          <label for="buscarFichero" class="input-group-text">Fichero de datos</label>
+          <input type="text" class="form-control" placeholder="/Ruta/Fichero" formControlName="ficheroEvaluar">
+          <button class="btn btn-primary" type="button" id="buscarFichero" (click)="obtenerRuta()">Buscar</button>
+        </div>
+        <div *ngIf="formConfEvaluacion.get('ficheroEvaluar')?.invalid && formConfEvaluacion.get('ficheroEvaluar')?.touched">
+          <div class="text-danger mb-3"> {{mensajesError.nombreFichero[0].mensaje}}.</div>
+        </div>
+      </div>
+      <div class="col-5">
+        <div class="p-2 container border rounded mb-2">
+          <label for="customRange" class="form-label d-flex justify-content-center">Porentaje de evaluación</label>
+          <div class="d-flex">
+            <input type="range" class="form-range m-2 custom-range-darken" min="0" max="100" step="5" id="customRange" (change)="actualizarTasa($event)" value="25">
+            <input type="text" class="form-control text-center" style="width:14%" value="25" formControlName="tasaEvaluacion">
+          </div>
+        </div>
+        <div *ngIf="formConfEvaluacion.get('tasaEvaluacion')?.invalid">
+          <div class="text-danger mb-3"> {{mensajesError.tasaEvaluacion[0].mensaje}}.</div>
+        </div>
+      </div>
+      <div class="d-grid gap-2 mt-4 mb-3">
+        <button class="btn btn-primary" type="button" (click)="evaluar()">Evaluar
+          <span *ngIf="procesandoEvaluacion" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+        </button>
+      </div>
+      <div class="row m-0" *ngIf="formIncompleto">
+        <div class="text-danger text-center m-0"> {{mensajesError.formulario[0].mensaje}}.</div>
+      </div>
+      <div class="row m-0" *ngIf="exception">
+        <div class="text-danger text-center m-0"> Error en la petición, revise la lógica de la operación.<br/>
+          Recuerte que el archivo de evaluación debe tener las mismas características que el modelo.
+        </div>
+      </div>
+    </div>
+    <div [ngStyle]="{'display': evaluacionLista ? '' : 'none'}">
+      <div class="row d-flex justify-content-center mt-2">
+        <div class="col-5 d-flex m-2 justify-content-center">
+          <img class="img-thumbnail" src="assets/webImage_cm.png" alt="" height="250" style="max-height: 250px;">
+        </div>
+        <div class="col-5 d-flex m-2 justify-content-center">
+          <img src="assets/webImage_roc.png" height="250" class="img-thumbnail" alt="" style="max-height: 250px;">
+        </div>
+      </div>
+
+
+      <div class="row d-flex justify-content-evenly" [formGroup]="formEvaluacion">
+        <div class="col-4 m-2">
+          <table class="table table-striped text-center">
+            <thead>
+              <tr>
+                <th scope="col">Medida</th>
+                <th scope="col">Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Exactitud</th>
+                <td [textContent]="formEvaluacion.value.exactitud"> </td>
+              </tr>
+              <tr>
+                <th scope="row">Precisión</th>
+                <td [textContent]="formEvaluacion.value.precision"></td>
+              </tr>
+              <tr>
+                <th scope="row">Exhaustividad (Recall)</th>
+                <td [textContent]="formEvaluacion.value.recall"></td>
+              </tr>
+              <tr>
+                <th scope="row">Puntuación F1</th>
+                <td [textContent]="formEvaluacion.value.f1"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-4 m-2">
+          <table class="table table-striped text-center">
+            <thead>
+              <tr>
+                <th scope="col">Medida</th>
+                <th scope="col">Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">TCR lambda = 1</th>
+                <td [textContent]="formEvaluacion.value.tcr1"></td>
+              </tr>
+              <tr>
+                <th scope="row">TCR lambda = 9</th>
+                <td [textContent]="formEvaluacion.value.tcr9"></td>
+              </tr>
+              <tr>
+                <th scope="row">TCR lambda = 999</th>
+                <td [textContent]="formEvaluacion.value.tcr999"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="btn btn-primary position-absolute bottom-0 left-0 mb-3">
+      <button class="btn btn-primary" (click)="navegarEntrenar()">Entrenamiento</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,102 @@
+<div>
+  <div class="col-10 container border border-2 rounded mt-3 p-5 pt-3">
+    <div class="d-flex justify-content-center">
+      <h2 class="row-12 mt-1">Evaluación del modelo</h2>
+    </div>
+    <div class="d-grid gap-2 mt-4">
+      <button class="btn btn-primary" type="button" (click)="evaluar()">Evaluar
+        <span *ngIf="procesandoEvaluacion" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+      </button>
+      <div class="row m-0" *ngIf="exception">
+        <div class="text-danger text-center mb-3"> Error en la petición, revise la lógica de la operación y del entrenamiento.</div>
+      </div>
+    </div>
+
+    <div [ngStyle]="{'display': evaluacionLista ? '' : 'none'}">
+      <div class="row d-flex justify-content-center mt-2">
+        <div class="col-5 d-flex m-2 justify-content-center">
+          <img class="img-thumbnail" src="../../../../assets/webImage_cm.png" alt="" height="250" style="max-height: 250px;">
+        </div>
+        <div class="col-5 d-flex m-2 justify-content-center">
+          <img src="../../../../assets/webImage_roc.png" height="250" class="img-thumbnail" alt="" style="max-height: 250px;">
+        </div>
+      </div>
+
+
+      <div class="row d-flex justify-content-evenly" [formGroup]="formEvaluacion">
+        <div class="col-4 m-2">
+          <table class="table table-striped text-center">
+            <thead>
+              <tr>
+                <th scope="col">Medida</th>
+                <th scope="col">Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Exactitud</th>
+                <td [textContent]="formEvaluacion.value.exactitud"> </td>
+              </tr>
+              <tr>
+                <th scope="row">Precisión</th>
+                <td [textContent]="formEvaluacion.value.precision"></td>
+              </tr>
+              <tr>
+                <th scope="row">Exhaustividad (Recall)</th>
+                <td [textContent]="formEvaluacion.value.recall"></td>
+              </tr>
+              <tr>
+                <th scope="row">Puntuación F1</th>
+                <td [textContent]="formEvaluacion.value.f1"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-4 m-2">
+          <table class="table table-striped text-center">
+            <thead>
+              <tr>
+                <th scope="col">Medida</th>
+                <th scope="col">Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">TCR lambda = 1</th>
+                <td [textContent]="formEvaluacion.value.tcr1"></td>
+              </tr>
+              <tr>
+                <th scope="row">TCR lambda = 9</th>
+                <td [textContent]="formEvaluacion.value.tcr9"></td>
+              </tr>
+              <tr>
+                <th scope="row">TCR lambda = 999</th>
+                <td [textContent]="formEvaluacion.value.tcr999"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div [formGroup]="formGuardarModelo">
+        <div class="input-group m-3">
+          <label for="GuardarModelo" class="input-group-text">Guardar Modelo</label>
+          <input type="text" class="form-control" placeholder="Nombre de salida" formControlName="nombreGuardarModelo">
+          <button class="btn btn-primary" type="button" id="GuardarModelo" (click)="guardarModelo()">Guardar</button>
+        </div>
+        <div class="row m-0" *ngIf="modeloGuardado">
+          <div class="text-success text-center"> Modelo guardado.</div>
+        </div>
+        <div class="row m-0" *ngIf="exceptionGuardar">
+          <div class="text-danger text-center mb-3"> Error en la petición, revise la lógica de la operación.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="btn btn-primary position-absolute bottom-0 left-0 mb-3">
+      <button class="btn btn-primary" (click)="navegarEntrenar()">Entrenamiento</button>
+    </div>
+  </div>
+</div>
